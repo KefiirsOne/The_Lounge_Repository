@@ -1,0 +1,7 @@
+1) Palaid testa web serveri ar ./run_server
+2) Ej uz http://localhost:8000/
+3) PROFIT
+
+Galvenais skripts ir src/Game.js
+Debugot var no browsera konsoles
+Par bibliotēku lasi šeit: http://phaser.io/learn
