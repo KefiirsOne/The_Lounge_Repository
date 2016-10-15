@@ -59,6 +59,9 @@ BasicGame.Game.prototype = {
 	this.load.image('diamond', 'asset/diamond.png');
         this.load.image('firstaid', 'asset/firstaid.png');
 
+	this.load.image('mustangs', 'asset/mustangs.png');
+	this.load.image('astra', 'asset/astra.png');
+
 	this.load.image('background_1', 'asset/japanese_sun.png');
 	this.load.image('background_2', 'asset/background_2.png');
 	this.load.image('background_3', 'asset/background_3.png');
@@ -117,6 +120,18 @@ BasicGame.Game.prototype = {
         ledge = platforms.create(-150, 450, 'ground');
 
         ledge.body.immovable = true;
+
+	cars = this.add.group();
+	cars.enableBody = true;
+
+	car = cars.create(2000,this.world.height - 250,'mustangs');
+	car.body.bounce.y = 0.1;
+	car.body.gravity.y = 600;
+
+	car = cars.create(2500,this.world.height - 250,'astra');
+	car.scale.setTo(0.8);
+	car.body.bounce.y = 0.1;
+	car.body.gravity.y = 600;
 
         
             // The player and its settings
@@ -196,6 +211,7 @@ BasicGame.Game.prototype = {
         this.physics.arcade.collide(player, baddie);
 	this.physics.arcade.collide(baddie, stars);
 	this.physics.arcade.collide(baddie, platforms);
+	this.physics.arcade.collide(cars, platforms);
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
      
         this.physics.arcade.overlap(player, stars, this.collectStar, null, this);
