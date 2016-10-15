@@ -66,9 +66,12 @@ BasicGame.Game.prototype = {
     },
 
     create: function () {
+	//Pasaules lielums
+	this.world.setBounds(0, 0, 3200, 900);
+
         this.physics.startSystem(Phaser.Physics.ARCADE);
         background = this.add.sprite(0, 0, 'sky');
-        background.scale.setTo(2, 1.5);
+        background.scale.setTo(4, 1.5);
 
         //  The platforms group contains the ground and the 2 ledges we can jump on
         platforms = this.add.group();
@@ -79,7 +82,7 @@ BasicGame.Game.prototype = {
         // Here we create the ground.
         var ground = platforms.create(0, this.world.height - 64, 'ground');
         //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-        ground.scale.setTo(4, 2);
+        ground.scale.setTo(8, 2);
 	ground.body.immovable = true;
 
 	ground = platforms.create(0, this.world.height - 64-32, 'ground');
@@ -107,6 +110,8 @@ BasicGame.Game.prototype = {
         
             // The player and its settings
         player = this.add.sprite(32, this.world.height - 150, 'dude');
+
+	this.camera.follow(player);
 
         //  We need to enable physics on the player
         this.physics.arcade.enable(player);
