@@ -54,14 +54,20 @@ BasicGame.Game.prototype = {
         // Here we load the assets required for our preloader (in this case a 
         // background and a loading bar)
         this.load.image('logo', 'asset/phaser.png');
-        this.load.image('sky', 'asset/sky.png');
         this.load.image('ground', 'asset/platform.png');
         this.load.image('star', 'asset/star.png');
 	this.load.image('diamond', 'asset/diamond.png');
         this.load.image('firstaid', 'asset/firstaid.png');
+
+	this.load.image('background_1', 'asset/japanese_sun.png');
+	this.load.image('background_2', 'asset/background_2.png');
+	this.load.image('background_3', 'asset/background_3.png');
+	this.load.image('background_4', 'asset/background_4.png');
 	
         this.load.spritesheet('dude', 'asset/dude.png', 32, 48);
 	this.load.spritesheet('baddie', 'asset/baddie.png', 32, 32);
+
+	
 
     },
 
@@ -70,8 +76,13 @@ BasicGame.Game.prototype = {
 	this.world.setBounds(0, 0, 3200, 900);
 
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        background = this.add.sprite(0, 0, 'sky');
-        background.scale.setTo(4, 1.5);
+
+	this.parallax = new Parallax(this);
+	this.parallax.add("background_1",false);
+	this.parallax.add("background_2",false, {tile:3});
+	this.parallax.add("background_3",true, {tile:3});
+	//this.cache.getImage("background_4",true).scale.set(2);
+	this.parallax.add("background_4",false, {tile:3});
 
         //  The platforms group contains the ground and the 2 ledges we can jump on
         platforms = this.add.group();
@@ -109,7 +120,8 @@ BasicGame.Game.prototype = {
 
         
             // The player and its settings
-        player = this.add.sprite(32, this.world.height - 150, 'dude');
+        player = this.add.sprite(100, this.world.height - 250, 'dude');
+	player.scale.setTo(2);
 
 	this.camera.follow(player);
 
@@ -118,7 +130,7 @@ BasicGame.Game.prototype = {
 
         //  Player physics properties. Give the little guy a slight bounce.
         player.body.bounce.y = 0.2;
-        player.body.gravity.y = 300;
+        player.body.gravity.y = 600;
         player.body.collideWorldBounds = true;
 
         //  Our two animations, walking left and right.
@@ -126,7 +138,8 @@ BasicGame.Game.prototype = {
         player.animations.add('right', [5, 6, 7, 8], 10, true);
 
 
-	baddie = this.add.sprite(1000, this.world.height - 150, 'baddie');
+	baddie = this.add.sprite(1000, this.world.height - 250, 'baddie');
+	baddie.scale.setTo(2);
         this.physics.arcade.enable(baddie);
         baddie.body.bounce.y = 0.2;
         baddie.body.gravity.y = 300;
@@ -154,7 +167,7 @@ BasicGame.Game.prototype = {
             //  Create a star inside of the 'stars' group
             var rand = spriteNames[Math.floor(Math.random() * spriteNames.length)];
             var star = stars.create(i * 70, 0, rand);
-
+	    star.scale.setTo(1.5);
             //  Let gravity do its thing
             star.body.gravity.y = 300;
 
@@ -168,7 +181,8 @@ BasicGame.Game.prototype = {
 
         //  The score
 	this.score = 0;
-        this.scoreText = this.add.text(16, 16, 'Punkti: 0', { fontSize: '32px', fill: '#000' });
+        this.scoreText = this.add.text(16, 16, 'Punkti: 0', { fontSize: '32px', fill: 'white' });
+	this.scoreText.fixedToCamera = true;
 
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
@@ -192,7 +206,7 @@ BasicGame.Game.prototype = {
         if (cursors.left.isDown)
         {
             //  Move to the left
-            player.body.velocity.x = -150;
+            player.body.velocity.x = -200;
 
             player.animations.play('left');
 
@@ -200,7 +214,7 @@ BasicGame.Game.prototype = {
         else if (cursors.right.isDown)
         {
             //  Move to the right
-            player.body.velocity.x = 150;
+            player.body.velocity.x = 200;
 
             player.animations.play('right');
         }
@@ -215,20 +229,23 @@ BasicGame.Game.prototype = {
         //  Allow the player to jump if they are touching the ground.
         if (cursors.up.isDown && player.body.touching.down)
         {
-            player.body.velocity.y = -350;
+            player.body.velocity.y = -400;
         }
 
 	if (baddie.body.touching.left)
 	{
-	    baddie.body.velocity.x = 200;
+	    baddie.body.velocity.x = 250;
 	    baddie.animations.play('right');
 	}
 
 	if (baddie.body.touching.right)
 	{
-	    baddie.body.velocity.x = -200;
+	    baddie.body.velocity.x = -250;
 	    baddie.animations.play('left');
 	}
+
+
+	this.parallax.update();
 
     },
 
