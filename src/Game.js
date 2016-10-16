@@ -1,4 +1,13 @@
 /* jshint browser:true */
+
+function adjust() {
+	var divgame = document.getElementById("game");
+	divgame.style.width = window.innerWidth + "px";
+	divgame.style.height = window.innerHeight + "px";
+}
+
+window.addEventListener('resize', function() {       adjust();   });
+
 // create BasicGame Class
 BasicGame = {
 
@@ -14,8 +23,10 @@ BasicGame.Game.prototype = {
     init: function () {
         // set up input max pointers
         this.input.maxPointers = 1;
+
         // set up stage disable visibility change
         this.stage.disableVisibilityChange = true;
+
         // Set up the scaling method used by the ScaleManager
         // Valid values for scaleMode are:
         // * EXACT_FIT
@@ -24,6 +35,7 @@ BasicGame.Game.prototype = {
         // * RESIZE
         // See http://docs.phaser.io/Phaser.ScaleManager.html for full document
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
         // If you wish to align your game in the middle of the page then you can
         // set this value to true. It will place a re-calculated margin-left
         // pixel value onto the canvas element which is updated on orientation /
@@ -31,21 +43,26 @@ BasicGame.Game.prototype = {
         // be on the page, it literally just sets the margin.
         this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
+
         // Force the orientation in landscape or portrait.
         // * Set first to true to force landscape. 
         // * Set second to true to force portrait.
         this.scale.forceOrientation(true, false);
+
         // Sets the callback that will be called when the window resize event
         // occurs, or if set the parent container changes dimensions. Use this 
         // to handle responsive game layout options. Note that the callback will
         // only be called if the ScaleManager.scaleMode is set to RESIZE.
         this.scale.setResizeCallback(this.gameResized, this);
+
         // Set screen size automatically based on the scaleMode. This is only
         // needed if ScaleMode is not set to RESIZE.
         this.scale.updateLayout(true);
+
         // Re-calculate scale mode and update screen size. This only applies if
         // ScaleMode is not set to RESIZE.
         this.scale.refresh();
+	adjust();
 
     },
 
@@ -84,18 +101,16 @@ BasicGame.Game.prototype = {
 	this.parallax.add("background_1",false);
 	this.parallax.add("background_2",false, {tile:3});
 	this.parallax.add("background_3",true, {tile:3});
-	//this.cache.getImage("background_4",true).scale.set(2);
 	this.parallax.add("background_4",false, {tile:3});
 
-        //  The platforms group contains the ground and the 2 ledges we can jump on
+
+        //  The platforms group contains the ground and the ledges we can jump on
         platforms = this.add.group();
 
         //  We will enable physics for any object that is created in this group
         platforms.enableBody = true;
 
-        // Here we create the ground.
         var ground = platforms.create(0, this.world.height - 64, 'ground');
-        //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
         ground.scale.setTo(8, 2);
 	ground.body.immovable = true;
 
@@ -107,20 +122,13 @@ BasicGame.Game.prototype = {
 	ground.scale.setTo(0.1,1);
 	ground.body.immovable = true;
 
-	
-
-        //  This stops it from falling away when you jump on it
-        ground.body.immovable = true;
-
-        //  Now let's create two ledges
         var ledge = platforms.create(400, 600, 'ground');
-
         ledge.body.immovable = true;
 
         ledge = platforms.create(-150, 450, 'ground');
-
         ledge.body.immovable = true;
 
+	//Mašīnas
 	cars = this.add.group();
 	cars.enableBody = true;
 
@@ -134,7 +142,7 @@ BasicGame.Game.prototype = {
 	car.body.gravity.y = 600;
 
         
-            // The player and its settings
+        // The player and its settings
         player = this.add.sprite(100, this.world.height - 250, 'dude');
 	player.scale.setTo(2);
 
@@ -160,7 +168,6 @@ BasicGame.Game.prototype = {
         baddie.body.gravity.y = 300;
         baddie.body.collideWorldBounds = true;
 
-        //  Our two animations, walking left and right.
         baddie.animations.add('left', [0, 1], 10, true);
         baddie.animations.add('right', [2, 3], 10, true);
 
@@ -191,9 +198,6 @@ BasicGame.Game.prototype = {
         }
 
 
-	
-
-
         //  The score
 	this.score = 0;
         this.scoreText = this.add.text(16, 16, 'Punkti: 0', { fontSize: '32px', fill: 'white' });
@@ -201,6 +205,7 @@ BasicGame.Game.prototype = {
 
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
+	this.input.onDown.addOnce(changeMummy, this);
     },
     
     update: function() {
@@ -212,38 +217,34 @@ BasicGame.Game.prototype = {
 	this.physics.arcade.collide(baddie, stars);
 	this.physics.arcade.collide(baddie, platforms);
 	this.physics.arcade.collide(cars, platforms);
-        //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-     
+
+        //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function   
         this.physics.arcade.overlap(player, stars, this.collectStar, null, this);
 
         //  Reset the players velocity (movement)
         player.body.velocity.x = 0;
 
-        if (cursors.left.isDown)
+        if (cursors.left.isDown || this.input.pointer1.x < 400 && this.input.pointer1.isDown)
         {
             //  Move to the left
             player.body.velocity.x = -200;
-
             player.animations.play('left');
-
         }
-        else if (cursors.right.isDown)
+        else if (cursors.right.isDown || this.input.pointer1.x > 1200 && this.input.pointer1.isDown)
         {
             //  Move to the right
             player.body.velocity.x = 200;
-
             player.animations.play('right');
         }
         else
         {
             //  Stand still
             player.animations.stop();
-
             player.frame = 4;
         }
 
         //  Allow the player to jump if they are touching the ground.
-        if (cursors.up.isDown && player.body.touching.down)
+        if ((cursors.up.isDown || this.input.pointer1.y < 500 && this.input.pointer1.isDown) && player.body.touching.down)
         {
             player.body.velocity.y = -400;
         }
@@ -284,6 +285,8 @@ BasicGame.Game.prototype = {
         // orientation on a device or resizing the browser window. Note that 
         // this callback is only really useful if you use a ScaleMode of RESIZE 
         // and place it inside your main game state.
+	//var scale = Math.min(window.innerWidth / this.game.width, window.innerHeight / this.game.height);
+    	//manager.setUserScale(scale, scale, 0, 0);
 
     }
 
