@@ -8,10 +8,7 @@ function adjust() {
 
 window.addEventListener('resize', function() {       adjust();   });
 
-// create BasicGame Class
-BasicGame = {
 
-};
 
 // create Game function in BasicGame
 BasicGame.Game = function (game) {
@@ -68,26 +65,7 @@ BasicGame.Game.prototype = {
 
     preload: function () {
 
-        // Here we load the assets required for our preloader (in this case a 
-        // background and a loading bar)
-        this.load.image('logo', 'asset/phaser.png');
-        this.load.image('ground', 'asset/platform.png');
-        this.load.image('star', 'asset/star.png');
-	this.load.image('diamond', 'asset/diamond.png');
-        this.load.image('firstaid', 'asset/firstaid.png');
 
-	this.load.image('mustangs', 'asset/mustangs.png');
-	this.load.image('astra', 'asset/astra.png');
-
-	this.load.image('background_1', 'asset/japanese_sun.png');
-	this.load.image('background_2', 'asset/background_2.png');
-	this.load.image('background_3', 'asset/background_3.png');
-	this.load.image('background_4', 'asset/background_4.png');
-	
-        this.load.spritesheet('dude', 'asset/dude.png', 32, 48);
-	this.load.spritesheet('baddie', 'asset/baddie.png', 32, 32);
-
-	
 
     },
 
@@ -205,7 +183,7 @@ BasicGame.Game.prototype = {
 
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
-	this.input.onDown.addOnce(changeMummy, this);
+//	this.input.onDown.addOnce(changeMummy, this);
     },
     
     update: function() {
@@ -264,6 +242,8 @@ BasicGame.Game.prototype = {
 
 	this.parallax.update();
 
+	//this.game.world.wrap(player, -(this.game.width/2), false, true, false);
+
     },
 
     collectStar: function (player, star) {
@@ -288,6 +268,10 @@ BasicGame.Game.prototype = {
 	//var scale = Math.min(window.innerWidth / this.game.width, window.innerHeight / this.game.height);
     	//manager.setUserScale(scale, scale, 0, 0);
 
+    },
+
+    gameOver: function(){
+	this.game.state.start("GameOver");
     }
 
 };

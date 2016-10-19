@@ -31,16 +31,24 @@
     <link rel="apple-touch-icon" sizes="512x512" href="icons/app_icon_512x512.png">
     <link rel="apple-touch-icon" sizes="1024x1024" href="icons/app_icon_1024x1024.png">
     <link rel="stylesheet" href="css/stylesheet.css" type="text/css" charset="utf-8" />
+
+
     <!-- Load Phaser engine -->
     <script src="lib/phaser.min.js"></script>
     <!-- Load game source files -->
+    <script src="src/boot.js"></script>
+    <script src="src/preload.js"></script>
+    <script src="src/gametitle.js"></script>
     <script src="src/parallax.js"></script>
     <script src="src/Game.js"></script>
+    <script src="src/gameover.js"></script>
     <!-- Load game entrance -->
     <script src="src/app.js"></script>
+
+
 </head>
 <body>
-    <!-- Main canvas for rendering game stage -->
+    <!-- Šajā HTML elementā tiks ievietota spēle -->
     <div id="game"></div>
 </body>
 </html>

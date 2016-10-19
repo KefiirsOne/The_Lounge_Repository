@@ -1,15 +1,17 @@
 (function () {
-    /* globals Phaser:false, BasicGame:false */
-    //  Create your Phaser game and inject it into the game div.
-    //  We did it in a window.onload event, but you can do it anywhere (requireJS load, anonymous function, jQuery dom ready, - whatever floats your boat)
-    //  We're using a game size of 640 x 480 here, but you can use whatever you feel makes sense for your game of course.
+    //game ir galvenais JS objekts, kas satur pilnīgi visu pārējo programmu,
+    //"game" parameters Phaser.Game funkcijā nosaka, kur iekš index.html spēle tiks ievietota
     var game = new Phaser.Game(1600, 900, Phaser.AUTO, 'game');
+    console.log("Spēle radīta!");
 
-    //  Add the States your game has.
-    //  You don't have to do this in the html, it could be done in your Game state too, but for simplicity I'll keep it here.
-    game.state.add('Game', BasicGame.Game);
+    //Te tiek pievienoti visi state machine stāvokļi, caur kuriem ies programma
+    game.state.add("Boot", BasicGame.Boot);
+    game.state.add("Preload", BasicGame.Preload);
+    game.state.add("GameTitle", BasicGame.GameTitle);
+    game.state.add("Game", BasicGame.Game);
+    game.state.add("GameOver", BasicGame.GameOver);
 
-    //  Now start the Game state.
-    game.state.start('Game');
+    
+    game.state.start('Boot');
 
 })();
