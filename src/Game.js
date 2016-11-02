@@ -1,15 +1,5 @@
 /* jshint browser:true */
 
-function adjust() {
-	var divgame = document.getElementById("game");
-	divgame.style.width = window.innerWidth + "px";
-	divgame.style.height = window.innerHeight + "px";
-}
-
-window.addEventListener('resize', function() {       adjust();   });
-
-
-
 // create Game function in BasicGame
 BasicGame.Game = function (game) {
 };
@@ -70,16 +60,16 @@ BasicGame.Game.prototype = {
     },
 
     create: function () {
-	//Pasaules lielums
-	this.world.setBounds(0, 0, 3200, 900);
+        //Pasaules lielums
+        this.world.setBounds(0, 0, 3200, 900);
 
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
-	this.parallax = new Parallax(this);
-	this.parallax.add("background_1",false);
-	this.parallax.add("background_2",false, {tile:3});
-	this.parallax.add("background_3",true, {tile:3});
-	this.parallax.add("background_4",false, {tile:3});
+        this.parallax = new Parallax(this);
+        this.parallax.add("background_1",false);
+        this.parallax.add("background_2",false, {tile:3});
+        this.parallax.add("background_3",true, {tile:3});
+        this.parallax.add("background_4",false, {tile:3});
 
 
         //  The platforms group contains the ground and the ledges we can jump on
@@ -90,15 +80,15 @@ BasicGame.Game.prototype = {
 
         var ground = platforms.create(0, this.world.height - 64, 'ground');
         ground.scale.setTo(8, 2);
-	ground.body.immovable = true;
+        ground.body.immovable = true;
 
-	ground = platforms.create(0, this.world.height - 64-32, 'ground');
-	ground.scale.setTo(0.1,1);
-	ground.body.immovable = true;
+        ground = platforms.create(0, this.world.height - 64-32, 'ground');
+        ground.scale.setTo(0.1,1);
+        ground.body.immovable = true;
 
-	ground = platforms.create(1580, this.world.height - 64-32, 'ground');
-	ground.scale.setTo(0.1,1);
-	ground.body.immovable = true;
+        ground = platforms.create(1580, this.world.height - 64-32, 'ground');
+        ground.scale.setTo(0.1,1);
+        ground.body.immovable = true;
 
         var ledge = platforms.create(400, 600, 'ground');
         ledge.body.immovable = true;
@@ -106,25 +96,25 @@ BasicGame.Game.prototype = {
         ledge = platforms.create(-150, 450, 'ground');
         ledge.body.immovable = true;
 
-	//Mašīnas
-	cars = this.add.group();
-	cars.enableBody = true;
+        //Mašīnas
+        cars = this.add.group();
+        cars.enableBody = true;
 
-	car = cars.create(2000,this.world.height - 250,'mustangs');
-	car.body.bounce.y = 0.1;
-	car.body.gravity.y = 600;
+        car = cars.create(2000,this.world.height - 250,'mustangs');
+        car.body.bounce.y = 0.1;
+        car.body.gravity.y = 600;
 
-	car = cars.create(2500,this.world.height - 250,'astra');
-	car.scale.setTo(0.8);
-	car.body.bounce.y = 0.1;
-	car.body.gravity.y = 600;
+        car = cars.create(2500,this.world.height - 250,'astra');
+        car.scale.setTo(0.8);
+        car.body.bounce.y = 0.1;
+        car.body.gravity.y = 600;
 
-        
+
         // The player and its settings
         player = this.add.sprite(100, this.world.height - 250, 'dude');
-	player.scale.setTo(2);
+        player.scale.setTo(2);
 
-	this.camera.follow(player);
+        this.camera.follow(player);
 
         //  We need to enable physics on the player
         this.physics.arcade.enable(player);
@@ -139,8 +129,8 @@ BasicGame.Game.prototype = {
         player.animations.add('right', [5, 6, 7, 8], 10, true);
 
 
-	baddie = this.add.sprite(1000, this.world.height - 250, 'baddie');
-	baddie.scale.setTo(2);
+        baddie = this.add.sprite(1000, this.world.height - 250, 'baddie');
+        baddie.scale.setTo(2);
         this.physics.arcade.enable(baddie);
         baddie.body.bounce.y = 0.2;
         baddie.body.gravity.y = 300;
@@ -167,7 +157,7 @@ BasicGame.Game.prototype = {
             //  Create a star inside of the 'stars' group
             var rand = spriteNames[Math.floor(Math.random() * spriteNames.length)];
             var star = stars.create(i * 70, 0, rand);
-	    star.scale.setTo(1.5);
+            star.scale.setTo(1.5);
             //  Let gravity do its thing
             star.body.gravity.y = 300;
 
@@ -177,13 +167,18 @@ BasicGame.Game.prototype = {
 
 
         //  The score
-	this.score = 0;
+        this.score = 0;
         this.scoreText = this.add.text(16, 16, 'Punkti: 0', { fontSize: '32px', fill: 'white' });
-	this.scoreText.fixedToCamera = true;
+        this.scoreText.fixedToCamera = true;
+
+
+        this.rimshot = this.add.audio('rimshot');
+        pausebreak = this.input.keyboard.addKey(19);
+        pausebreak.onDown.add(this.playRimshot, this);
 
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
-//	this.input.onDown.addOnce(changeMummy, this);
+    //	this.input.onDown.addOnce(changeMummy, this);
     },
     
     update: function() {
@@ -192,9 +187,9 @@ BasicGame.Game.prototype = {
         this.physics.arcade.collide(player, platforms);
         this.physics.arcade.collide(stars, platforms);
         this.physics.arcade.collide(player, baddie);
-	this.physics.arcade.collide(baddie, stars);
-	this.physics.arcade.collide(baddie, platforms);
-	this.physics.arcade.collide(cars, platforms);
+        this.physics.arcade.collide(baddie, stars);
+        this.physics.arcade.collide(baddie, platforms);
+        this.physics.arcade.collide(cars, platforms);
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function   
         this.physics.arcade.overlap(player, stars, this.collectStar, null, this);
@@ -227,22 +222,22 @@ BasicGame.Game.prototype = {
             player.body.velocity.y = -400;
         }
 
-	if (baddie.body.touching.left)
-	{
-	    baddie.body.velocity.x = 250;
-	    baddie.animations.play('right');
-	}
+        if (baddie.body.touching.left)
+        {
+            baddie.body.velocity.x = 250;
+            baddie.animations.play('right');
+        }
 
-	if (baddie.body.touching.right)
-	{
-	    baddie.body.velocity.x = -250;
-	    baddie.animations.play('left');
-	}
+        if (baddie.body.touching.right)
+        {
+            baddie.body.velocity.x = -250;
+            baddie.animations.play('left');
+        }
 
 
-	this.parallax.update();
+        this.parallax.update();
 
-	//this.game.world.wrap(player, -(this.game.width/2), false, true, false);
+        //this.game.world.wrap(player, -(this.game.width/2), false, true, false);
 
     },
 
@@ -256,6 +251,11 @@ BasicGame.Game.prototype = {
         this.scoreText.text = 'Punkti: ' + this.score;
 
     },
+    
+    playRimshot: function () {
+        console.log("Badum-tsss!");
+        this.rimshot.play();
+    },
 
 
     gameResized: function (width, height) {
@@ -265,13 +265,14 @@ BasicGame.Game.prototype = {
         // orientation on a device or resizing the browser window. Note that 
         // this callback is only really useful if you use a ScaleMode of RESIZE 
         // and place it inside your main game state.
-	//var scale = Math.min(window.innerWidth / this.game.width, window.innerHeight / this.game.height);
+        //var scale = Math.min(window.innerWidth / this.game.width, window.innerHeight / this.game.height);
     	//manager.setUserScale(scale, scale, 0, 0);
 
     },
+  
 
     gameOver: function(){
-	this.game.state.start("GameOver");
+        this.game.state.start("GameOver");
     }
 
 };

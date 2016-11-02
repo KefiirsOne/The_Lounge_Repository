@@ -4,6 +4,7 @@ BasicGame.GameTitle = function(game){
 BasicGame.GameTitle.prototype = {
 
 	create: function(){
+        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 		this.game.add.sprite(0,0,"background_1");
 
 		this.logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY*0.3, 'logo');

@@ -1,13 +1,23 @@
+function adjust() {
+	var divgame = document.getElementById("game");
+	divgame.style.width = window.innerWidth + "px";
+	divgame.style.height = window.innerHeight + "px";
+}
+
+window.addEventListener('resize', function() {       adjust();   });
+
+
 BasicGame.Preload = function(game){
 };
 
 BasicGame.Preload.prototype = {
 
 	preload: function(){ 
+        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 		//Boot state ielādētā bilde tagad tiek parādīta kā loading bars
-		this.preloadBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'loading_bar');
-		this.preloadBar.anchor.setTo(0.5);
-		this.preloadBar.scale.setTo(3);
+		this.preloadBar = this.add.sprite(0, this.game.world.centerY, 'loading_bar');
+        this.preloadBar.anchor.setTo(0,0.5);
+		this.preloadBar.scale.setTo(1600/50);
 
 		this.load.setPreloadSprite(this.preloadBar);
 
@@ -33,6 +43,9 @@ BasicGame.Preload.prototype = {
 	
 		this.load.spritesheet('dude', 'asset/dude.png', 32, 48);
 		this.load.spritesheet('baddie', 'asset/baddie.png', 32, 32);
+
+
+		this.load.audio('rimshot', 'asset/rimshot.wav');
 	},
 
 	create: function(){
